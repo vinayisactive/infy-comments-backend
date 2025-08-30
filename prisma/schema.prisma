@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Node {
+  id   String @id @default(uuid())
+  name String
+
+  parentNodeId String?
+  parentNode Node?   @relation("NodeToSubNode", fields: [parentNodeId], references: [id], onDelete: Cascade)
+
+  subNodes Node[]  @relation("NodeToSubNode")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
